@@ -1,4 +1,4 @@
-function geradorDeCodigoGrupo() {
+export function geradorDeCodigoGrupo() {
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let password = "";
     let length = 5;
