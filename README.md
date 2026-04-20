@@ -1,63 +1,38 @@
 # MobileDev-CollegeProject : FoodList
-Proposta: App de receitas que junta pessoas em grupos pra mostrar essas receitas de seus interesses.
+**Proposta**: App de receitas que conecta pessoas em grupos pra mostrar receitas de seus interesses.
 
-## Lógica de grupos, receitas e participantes:
+## Como funciona o App:
 
-O APP vai ter de:
+Inicialmente você será redirecionado para a tela de Login/Register.
 
-Usuários: 1 .. N
+Em seguida poderá escolher:
+1. Entrar em um grupo já existente seja inserindo o código do grupo ou pesquisando por seu nome ou por tags;
+2. Criar um grupo próprio, definindo Nome, e descrição(se desejar).
 
-Grupos: 1 .. N
+## Telas do App:
 
-Participantes por Grupos: 2 .. N
+     1. Grupos: 
 
-Receitas: 0 .. N
+          1.1 ENTRAR EM GRUPOS;
 
-## Informações de Receitas:
+          1.2 CRIAR GRUPOS;
 
-Cada receita DEVE ter:
+     2. Login/Registro;
 
-nome: 1
+     3. Inicio (Já logado em um grupo):
 
-ingredientes: 1 .. N 
+          1.1. View de Receitas;
+     
+          1.2. VIew de Participantes;
+     
+          1.3. Adicionar Receitas;
 
-Modo de preparo: 1 
+     4.Receitas:
 
-tags: 0 .. N 
+     1.1 Editar/Apagar Receitas;
 
-## Telas (principais):
+     1.2. Visualizar
 
-as telas que eu penso que possam ter de inicio, fora login/register, são 
+## Confira o rascunho das telas do app
 
-### ENTRAR EM GRUPOS 
-Pra entrar em um grupo ou pesquisa o nome ou a gente vê de implementar convites de grupo se for possível
-
-OBS:dá pra cada grupo ter tag tbm pra facilitar busca por interesses
-
-### CRIAR GRUPO
-
-Pra criar um grupo ele tem que ter um nome e opcionalmente uma descrição 
-
-## Telas:
-
-1. Grupos: 
-
-     1.1 ENTRAR EM GRUPOS;
-
-     1.2 CRIAR GRUPOS;
-
-2. Login/Registro;
-
-3. Inicio (Já logado em um grupo):
-
-     1.1. View de Receitas;
-    
-     1.2. VIew de Participantes;
-    
-     1.3. Adicionar Receitas;
-
-4.Receitas:
-
-    1.1 Editar/Apagar Receitas;
-
-    1.2. Visualizar
+para poder acessar os rascunhos [clique aqui](imgs\README.md).
