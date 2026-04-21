@@ -6,7 +6,7 @@
 
     Grupos: 1 .. N
 
-    Participantes por Grupos: 2 .. N
+    Participantes por Grupos: 1 .. N
 
     Receitas: 0 .. N
 

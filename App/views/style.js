@@ -2,11 +2,14 @@ import { StyleSheet } from "react-native";
 
 const Root = StyleSheet.create({
     colors: {
-        backgroundColor: '#ffa',
+        backgroundColor: '#FFF8F0',
         topMenu: '#606D76',
         RecipeItems: '#A9B4BC',
-        tittle: 'black',
+        tittle: 'orange',
         subtittle: 'grey',
+        cards:'white',
+        text:'#8B5E3C',
+        button:'#E67E22',
     },
     fontsize: {
         small: '5vw',
