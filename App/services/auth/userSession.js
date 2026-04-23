@@ -1,7 +1,8 @@
+import "./validateData";
+import validacao, { validarEmail, validarNome } from "./validateData";
+
 /**
- * UserSession Singleton - FoodList Architecture
- * 
- * Centraliza: Perfil do Usuário, Lista de Grupos e Grupo Ativo.
+ * Centraliza informações de Sessão de Usuário
  */
 
 class UserSession {
@@ -39,6 +40,30 @@ class UserSession {
 
   getUser() {
     return this._user;
+  }
+
+  atualizarNomeUsuario(newName) {
+    if (this._user) {
+      // todo: validacao de nome
+      validacao.setStrategy(validarNome)
+      isValidName = validacao.validar(newName, this._user.name)
+      if (isValidName = true) {
+        this._user.name == newName;
+      }
+    }
+  }
+
+  atualizarEmailUsuario(newEmail) {
+    if (this._user) {
+      validacao.setStrategy(validarEmail)
+      isValidEmail = validacao.validar(newEmail, this._user.email)
+
+      if (isValidEmail = true) {
+        this._user.email = newEmail
+      }
+      
+      console.log(`[Session] Email do utilizador atualizado para: ${newEmail}`);
+    }
   }
 
   // --- MÉTODOS DE GRUPO ---
