@@ -42,9 +42,15 @@ class UserSession {
     return this._user;
   }
 
+  /**
+   * Método para atualização de nome.
+   * 
+   * Compara se houve mudança entre os nomes, caso verdade atualiza, se não mantem igual.
+   * 
+   * @param {*} newName - novo valor para nome do usuário
+   */
   atualizarNomeUsuario(newName) {
     if (this._user) {
-      // todo: validacao de nome
       validacao.setStrategy(validarNome)
       isValidName = validacao.validar(newName, this._user.name)
       if (isValidName = true) {
@@ -53,6 +59,12 @@ class UserSession {
     }
   }
 
+  /**
+   * Método para atualização de nome.
+   * 
+   * Compara se houve mudança entre os emails, caso verdade atualiza, se não mantem igual.
+   * @param {*} newEmail - novo valor para email do usuário
+   */
   atualizarEmailUsuario(newEmail) {
     if (this._user) {
       validacao.setStrategy(validarEmail)
@@ -99,6 +111,11 @@ class UserSession {
 
   // --- UTILITÁRIOS ---
 
+  /**
+   * Método para checagem de sessão de usuário.
+   * 
+   * @returns estado de sessão do usuário (logado/Não Logado)
+   */
   isAuthenticated() {
     return this._isAuthenticated;
   }
