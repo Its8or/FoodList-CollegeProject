@@ -45,6 +45,15 @@ export default function Conta({ navigation }) {
       <Text style={styles.secaoTitulo}>CONTA</Text>
 
       <View style={styles.card}>
+        <TouchableOpacity style={styles.linha} onPress={() => navigation.navigate('EditarPerfil')}>
+          <View style={[styles.iconeWrapper, styles.iconeAviso]}>
+            <Text style={styles.icone}>✏️</Text>
+          </View>
+          <Text style={styles.label}>Editar perfil</Text>
+          <Text style={styles.seta}>›</Text>
+        </TouchableOpacity>
+
+        <View style={styles.divisor} />
         <TouchableOpacity style={styles.linha} onPress={handleSair}>
           <View style={[styles.iconeWrapper, styles.iconeAviso]}>
             <Text style={styles.icone}>🚪</Text>

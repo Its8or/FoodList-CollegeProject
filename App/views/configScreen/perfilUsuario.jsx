@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
+import { getIniciais } from '../../services/profile'
 
 // Substituir pelos dados reais do usuário (contexto/auth)
 const MOCK_USER = {
@@ -14,20 +15,11 @@ const MOCK_USER = {
   foto: null, // coloque uma URL string para exibir foto real
 };
 
-function getIniciais(nome) {
-  return nome
-    .split(' ')
-    .slice(0, 2)
-    .map((n) => n[0].toUpperCase())
-    .join('');
-}
-
 export default function PerfilUsuario() {
   const { nome, email, foto } = MOCK_USER;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.titulo}>Configurações</Text>
 
       <View style={styles.perfilContainer}>
         {foto ? (
@@ -35,7 +27,7 @@ export default function PerfilUsuario() {
         ) : (
           <View style={styles.avatarFallback}>
             <Text style={styles.avatarTexto}>{getIniciais(nome)}</Text>
-          </View>   
+          </View>
         )}
 
         <Text style={styles.nome}>{nome}</Text>

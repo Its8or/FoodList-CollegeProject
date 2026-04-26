@@ -5,14 +5,14 @@ import PerfilUsuario from './perfilUsuario';
 import Preferencias from './preferencias';
 import Conta from './conta';
 
-export default function ConfiguracoesScreen() {
-    return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-            <PerfilUsuario />
-            <Preferencias />
-            <Conta />
-        </ScrollView>
-    );
+export default function ConfiguracoesScreen({ navigation }) {
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <PerfilUsuario navigation={navigation} />
+      <Preferencias />
+      <Conta navigation={navigation} />
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
