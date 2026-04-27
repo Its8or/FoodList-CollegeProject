@@ -1,94 +1,76 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ScrollView,
-} from 'react-native';
-import { getIniciais } from '../../services/profile'
-
-// Substituir pelos dados reais do usuário (contexto/auth)
-const MOCK_USER = {
-  nome: 'Heitor Oliveira Terto',
-  email: 'heitoroliveiraterto@email.com',
-  foto: null, // coloque uma URL string para exibir foto real
-};
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { getIniciais } from '../../services/profile';
+import { useTheme } from '../styles/themeContext';
+import { useUser } from '../../services/userContext';
 
 export default function PerfilUsuario() {
-  const { nome, email, foto } = MOCK_USER;
+  const { theme } = useTheme();
+  const { perfil } = useUser();           // ← fonte única de verdade
+  const { nome, email, foto } = perfil;
+
+  const s = makeStyles(theme);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-
-      <View style={styles.perfilContainer}>
+    <ScrollView style={s.container} contentContainerStyle={s.content}>
+      <View style={s.perfilContainer}>
         {foto ? (
-          <Image source={{ uri: foto }} style={styles.foto} />
+          <Image source={{ uri: foto }} style={s.foto} />
         ) : (
-          <View style={styles.avatarFallback}>
-            <Text style={styles.avatarTexto}>{getIniciais(nome)}</Text>
+          <View style={s.avatarFallback}>
+            <Text style={s.avatarTexto}>{getIniciais(nome)}</Text>
           </View>
         )}
-
-        <Text style={styles.nome}>{nome}</Text>
-        <Text style={styles.email}>{email}</Text>
+        <Text style={s.nome}>{nome}</Text>
+        <Text style={s.email}>{email}</Text>
       </View>
     </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF8F0',
-  },
-  content: {
-    padding: 20,
-  },
-
-  titulo: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#E67E22',
-    textAlign: 'center',
-    marginBottom: 30,
-  },
-
-  perfilContainer: {
-    alignItems: 'center',
-  },
-
-  foto: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    resizeMode: 'cover',
-    marginBottom: 16,
-  },
-  avatarFallback: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: '#E67E22',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  avatarTexto: {
-    color: '#FFFFFF',
-    fontSize: 32,
-    fontWeight: 'bold',
-  },
-
-  nome: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#8B5E3C',
-    marginBottom: 4,
-  },
-  email: {
-    fontSize: 12,
-    color: '#8B5E3C',
-    opacity: 0.7,
-  },
-});
+function makeStyles(theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.backgroundMain,
+    },
+    content: {
+      padding: 20,
+    },
+    perfilContainer: {
+      alignItems: 'center',
+    },
+    foto: {
+      width: 90,
+      height: 90,
+      borderRadius: 45,
+      resizeMode: 'cover',
+      marginBottom: 16,
+    },
+    avatarFallback: {
+      width: 90,
+      height: 90,
+      borderRadius: 45,
+      backgroundColor: theme.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 16,
+    },
+    avatarTexto: {
+      color: theme.avatarText,
+      fontSize: 32,
+      fontWeight: 'bold',
+    },
+    nome: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: theme.textDark,
+      marginBottom: 4,
+    },
+    email: {
+      fontSize: 12,
+      color: theme.textMuted,
+      opacity: 0.7,
+    },
+  });
+}

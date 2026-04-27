@@ -1,13 +1,19 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
+import { useTheme } from '../styles/themeContext';
 
 import PerfilUsuario from './perfilUsuario';
 import Preferencias from './preferencias';
 import Conta from './conta';
 
 export default function ConfiguracoesScreen({ navigation }) {
+  const { theme } = useTheme();
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: theme.backgroundMain }]}
+      contentContainerStyle={styles.content}
+    >
       <PerfilUsuario navigation={navigation} />
       <Preferencias />
       <Conta navigation={navigation} />
@@ -16,19 +22,11 @@ export default function ConfiguracoesScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#FFF8F0',
-    },
-    content: {
-        padding: 20,
-        gap: 24,
-    },
-    titulo: {
-        fontSize: 26,
-        fontWeight: 'bold',
-        color: '#E67E22',
-        textAlign: 'center',
-        marginBottom: 30,
-    },
+  container: {
+    flex: 1,
+  },
+  content: {
+    padding: 20,
+    gap: 24,
+  },
 });

@@ -6,16 +6,22 @@ import EditarPerfilScreen from './views/configScreen/editarPerfilScreen';
 // import recipeScreen from './views/recipeScreen/recipeScreen'
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import { UserProvider } from './services/userContext';
+import { ThemeProvider } from './views/styles/themeContext';
 
 const Stack = createStackNavigator();
 
 function MyStack() {
   return (
-    <Stack.Navigator>
-      {/* <Stack.Screen name="Feed" component={feedScreen} /> */}
-      <Stack.Screen name="Configurações" component={ConfiguracoesScreen} />
-      <Stack.Screen name="EditarPerfil" component={EditarPerfilScreen} />
-    </Stack.Navigator>
+    <ThemeProvider>
+      <UserProvider>
+        <Stack.Navigator>
+          {/* <Stack.Screen name="Feed" component={feedScreen} /> */}
+          <Stack.Screen name="Configurações" component={ConfiguracoesScreen} />
+          <Stack.Screen name="EditarPerfil" component={EditarPerfilScreen} />
+        </Stack.Navigator>
+      </UserProvider>
+    </ThemeProvider>
   );
 }
 
