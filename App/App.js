@@ -1,27 +1,34 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native'
-import { configScreen } from './views/configScreen/configScreen'
-import { feedScreen } from './views/feedScreen/feedScreen'
-import { recipeScreen } from './views/recipeScreen/recipeScreen'
-import styles from './views/styles/style'
+import ConfiguracoesScreen from './views/configScreen/configScreen'
+import EditarPerfilScreen from './views/configScreen/editarPerfilScreen';
+// import feedScreen from './views/feedScreen/feedScreen'
+// import recipeScreen from './views/recipeScreen/recipeScreen'
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { UserProvider } from './services/userContext';
+import { ThemeProvider } from './views/styles/themeContext';
+
+const Stack = createStackNavigator();
+
+function MyStack() {
+  return (
+    <ThemeProvider>
+      <UserProvider>
+        <Stack.Navigator>
+          {/* <Stack.Screen name="Feed" component={feedScreen} /> */}
+          <Stack.Screen name="Configurações" component={ConfiguracoesScreen} />
+          <Stack.Screen name="EditarPerfil" component={EditarPerfilScreen} />
+        </Stack.Navigator>
+      </UserProvider>
+    </ThemeProvider>
+  );
+}
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <View style={styles.menu}>
-        {/* Group Info */}
-        <View> 
-          <Text>Group.Name</Text>
-          <Text>descrição</Text>
-        </View>
-        
-        {/* Menu Context */}
-        <View style={styles.menuContext}>
-          <Text>+</Text>
-          <Text>☰</Text>
-        </View>
-      
-      </View>
-    </View>
+    <NavigationContainer>
+      <MyStack />
+    </NavigationContainer>
   );
 }
