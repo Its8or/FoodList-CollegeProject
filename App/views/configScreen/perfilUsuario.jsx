@@ -6,9 +6,13 @@ import { useUser } from '../../services/userContext';
 
 export default function PerfilUsuario() {
   const { theme } = useTheme();
-  const { perfil } = useUser();           // ← fonte única de verdade
-  const { nome, email, foto } = perfil;
+  const { perfil } = useUser();
 
+  if (!perfil) {
+    return null; // Ou um <ActivityIndicator /> para indicar carregamento
+  }
+  
+  const { nome, email, foto } = perfil;
   const s = makeStyles(theme);
 
   return (

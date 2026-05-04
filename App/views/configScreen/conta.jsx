@@ -7,41 +7,23 @@ import {
   Alert,
 } from 'react-native';
 import { useTheme } from '../styles/themeContext';
+import session from '../../services/auth/userSession';
 
 export default function Conta({ navigation }) {
   const { theme } = useTheme();
   const s = makeStyles(theme);
 
   function handleSair() {
-    Alert.alert('Sair da conta', 'Tem certeza que deseja sair?', [
-      { text: 'Cancelar', style: 'cancel' },
+    Alert.alert('Sair', 'Deseja encerrar a sessão?', [
+      { text: 'Cancelar' },
       {
         text: 'Sair',
-        style: 'destructive',
         onPress: () => {
-          // TODO: limpar token/contexto de autenticação
+          session.logout(); // Limpa Singleton
           navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
         },
       },
     ]);
-  }
-
-  function handleExcluir() {
-    Alert.alert(
-      'Excluir conta',
-      'Essa ação é permanente e não poderá ser desfeita. Deseja continuar?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Excluir',
-          style: 'destructive',
-          onPress: () => {
-            // TODO: chamada à API para excluir a conta
-            navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
-          },
-        },
-      ]
-    );
   }
 
   return (
@@ -71,14 +53,6 @@ export default function Conta({ navigation }) {
         </TouchableOpacity>
 
         <View style={s.divisor} />
-
-        <TouchableOpacity style={s.linha} onPress={handleExcluir}>
-          <View style={[s.iconeWrapper, s.iconePerigo]}>
-            <Text style={s.icone}>🗑️</Text>
-          </View>
-          <Text style={[s.label, s.labelPerigo]}>Excluir conta</Text>
-          <Text style={[s.seta, s.labelPerigo]}>›</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
