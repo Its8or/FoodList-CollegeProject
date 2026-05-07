@@ -7,41 +7,30 @@ import {
   Alert,
 } from 'react-native';
 import { useTheme } from '../styles/themeContext';
+import session from '../../services/auth/userSession';
 
-export default function Conta({ navigation }) {
+/**  
+ * mostra foto, nome e email de usuário. 
+ */
+export default function ShowProfile({ navigation }) { 
   const { theme } = useTheme();
   const s = makeStyles(theme);
 
-  function handleSair() {
-    Alert.alert('Sair da conta', 'Tem certeza que deseja sair?', [
-      { text: 'Cancelar', style: 'cancel' },
+  /**
+   * Encerra a sessão do usuário, envia alert de confirmção e faz Logout.
+   */
+  async function handleSair() {
+    Alert.alert('Sair', 'Deseja encerrar a sessão?', [
+      { text: 'Cancelar' },
       {
         text: 'Sair',
-        style: 'destructive',
-        onPress: () => {
-          // TODO: limpar token/contexto de autenticação
-          navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+        onPress: async () => {
+          session.logout();
+          await AsyncStorage.removeItem('@perfil_usuario'); // limpa o disco também
+          navigation.reset({ index: 0, routes: [{ name: 'Login' }] }); // redireciona para tela de login, sem volta
         },
       },
     ]);
-  }
-
-  function handleExcluir() {
-    Alert.alert(
-      'Excluir conta',
-      'Essa ação é permanente e não poderá ser desfeita. Deseja continuar?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Excluir',
-          style: 'destructive',
-          onPress: () => {
-            // TODO: chamada à API para excluir a conta
-            navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
-          },
-        },
-      ]
-    );
   }
 
   return (
@@ -70,15 +59,6 @@ export default function Conta({ navigation }) {
           <Text style={s.seta}>›</Text>
         </TouchableOpacity>
 
-        <View style={s.divisor} />
-
-        <TouchableOpacity style={s.linha} onPress={handleExcluir}>
-          <View style={[s.iconeWrapper, s.iconePerigo]}>
-            <Text style={s.icone}>🗑️</Text>
-          </View>
-          <Text style={[s.label, s.labelPerigo]}>Excluir conta</Text>
-          <Text style={[s.seta, s.labelPerigo]}>›</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );

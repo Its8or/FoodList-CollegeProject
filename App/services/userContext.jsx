@@ -1,29 +1,29 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import session from './auth/userSession';
 
 const PERFIL_KEY = '@perfil_usuario';
 
-const PERFIL_PADRAO = {
-  nome: 'João Silva',
-  email: 'joao.silva@email.com',
-  foto: null,
-};
-
-const UserContext = createContext({
-  perfil: PERFIL_PADRAO,
-  atualizarPerfil: async () => {},
+export const UserContext = createContext({
+  perfil: null,
+  atualizarPerfil: async () => { },
 });
 
+/**
+ * Gerencia o perfil do usuário logado. 
+ * Carrega, atualiza e disponibiliza os dados para toda a aplicação.
+ */
 export function UserProvider({ children }) {
-  const [perfil, setPerfil] = useState(PERFIL_PADRAO);
+  const [perfil, setPerfil] = useState(session.getUser()); // inicializa com usuário salvo na memória.
 
-  // Carrega perfil salvo ao iniciar o app
   useEffect(() => {
     async function carregar() {
       try {
-        const json = await AsyncStorage.getItem(PERFIL_KEY);
+        const json = await AsyncStorage.getItem(PERFIL_KEY); // le dados do disco
         if (json !== null) {
-          setPerfil(JSON.parse(json));
+          const dados = JSON.parse(json);     // converte em objeto
+          session.login(dados);               // Inicializa o Singleton
+          setPerfil(dados);                   // atualiza o estado no React
         }
       } catch (e) {
         console.warn('UserContext: erro ao carregar perfil:', e);
@@ -32,10 +32,20 @@ export function UserProvider({ children }) {
     carregar();
   }, []);
 
-  // Persiste e atualiza o contexto em uma única chamada
+  /**
+   * atualiza o perfil do usuário em três lugares.
+   * @param {*} novoPerfil
+   */
   async function atualizarPerfil(novoPerfil) {
-    await AsyncStorage.setItem(PERFIL_KEY, JSON.stringify(novoPerfil));
-    setPerfil(novoPerfil);
+    // valida e salva em memória
+    session.atualizarNomeUsuario(novoPerfil.nome);
+    session.atualizarEmailUsuario(novoPerfil.email);
+    // Lê o resultado já validado
+    const perfilAtualizado = session.getUser();
+    // Persiste no disco
+    await AsyncStorage.setItem(PERFIL_KEY, JSON.stringify(perfilAtualizado));
+    //  Atualiza a UI
+    setPerfil({ ...perfilAtualizado });
   }
 
   return (
@@ -45,6 +55,4 @@ export function UserProvider({ children }) {
   );
 }
 
-export function useUser() {
-  return useContext(UserContext);
-}
+export const useUser = () => useContext(UserContext);

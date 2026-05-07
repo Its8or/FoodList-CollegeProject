@@ -1,63 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Alert,
-} from 'react-native';
-import { getIniciais } from '../../services/profile';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useTheme } from '../styles/themeContext';
 import { useUser } from '../../services/userContext';
+import { getIniciais } from '../../services/profile';
 
 export default function EditarPerfilScreen({ navigation }) {
   const { theme } = useTheme();
-  const { perfil, atualizarPerfil } = useUser();  // ← lê e escreve no contexto
+  const { perfil, atualizarPerfil } = useUser();
 
-  // Inicializa os campos com os dados atuais do contexto
-  const [nome, setNome] = useState(perfil.nome);
-  const [email, setEmail] = useState(perfil.email);
-  const [foto, setFoto] = useState(perfil.foto);
-
-  // Se o contexto mudar externamente, sincroniza os campos
-  useEffect(() => {
-    setNome(perfil.nome);
-    setEmail(perfil.email);
-    setFoto(perfil.foto);
-  }, [perfil]);
-
-  // Botão ativo apenas quando algo mudou em relação ao perfil salvo
-  const houveMudanca =
-    nome.trim() !== perfil.nome ||
-    email.trim() !== perfil.email ||
-    foto !== perfil.foto;
+  const [nome, setNome] = useState(perfil?.nome || '');
+  const [email, setEmail] = useState(perfil?.email || '');
+  const [foto, setFoto] = useState(perfil?.foto || '');
 
   async function handleSalvar() {
-    if (!nome.trim()) {
-      Alert.alert('Nome inválido', 'O nome não pode ficar em branco.');
-      return;
-    }
-    if (!email.trim() || !email.includes('@')) {
-      Alert.alert('E-mail inválido', 'Insira um endereço de e-mail válido.');
-      return;
-    }
-
-    const novoPerfil = { nome: nome.trim(), email: email.trim(), foto };
-
+    // validação e atualização para o contexto/singleton
     try {
-      await atualizarPerfil(novoPerfil); // persiste + atualiza contexto em uma chamada
-      Alert.alert('Sucesso', 'Perfil atualizado com sucesso!', [
+      await atualizarPerfil({ nome, email, foto });
+      Alert.alert('Sucesso', 'Perfil atualizado!', [
         { text: 'OK', onPress: () => navigation.goBack() },
       ]);
     } catch (e) {
-      console.warn('Erro ao salvar perfil:', e);
-      Alert.alert('Erro', 'Não foi possível salvar as alterações.');
+      Alert.alert('Erro', `Falha na validação ou salvamento.`);
     }
   }
 
+  const houveMudanca = nome !== (perfil?.nome || '') ||
+    email !== (perfil?.email || '') ||
+    foto !== (perfil?.foto || '');
   const s = makeStyles(theme);
 
   return (
@@ -67,7 +36,7 @@ export default function EditarPerfilScreen({ navigation }) {
       {/* Avatar */}
       <View style={s.avatarContainer}>
         {foto ? (
-          <Image source={{ uri: foto }} style={s.foto} />
+          <Image source={require('../../imgs/profilePic.png')} style={s.foto} />
         ) : (
           <View style={s.avatarFallback}>
             <Text style={s.avatarTexto}>{getIniciais(nome)}</Text>
