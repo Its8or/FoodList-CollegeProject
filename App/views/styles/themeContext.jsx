@@ -10,14 +10,23 @@ const ThemeContext = createContext({
   toggleTheme: () => {},
 });
 
+/**
+ * Controla e salva  o Tema do aplicativo do Usuário.
+ */
 export function ThemeProvider({ children }) {
-  const [isDark, setIsDark] = useState(false);
+  {/**
+    * isDark:     valor atual
+    * setIsDark:  função para atualizar tema
+    */}
+  const [isDark, setIsDark] = useState(false); {/* guarda e atualiza tema do app */}
 
-  // Lê preferência salva ao iniciar o app
   useEffect(() => {
+    /**
+     * Carrega preferência de tema do usuário
+     */
     async function carregarTema() {
       try {
-        const json = await AsyncStorage.getItem(PREFS_KEY);
+        const json = await AsyncStorage.getItem(PREFS_KEY); // busca e atribue as preferências de usuário.
         if (json !== null) {
           const prefs = JSON.parse(json);
           setIsDark(prefs.modoEscuro ?? false);
@@ -29,9 +38,12 @@ export function ThemeProvider({ children }) {
     carregarTema();
   }, []);
 
-  // Alterna tema E persiste junto com as demais preferências
+  /**
+   * Atualiza o tema e salva a preferência no armazenamento local
+   * @param {Boolean} valor: true(escuro) | false(claro) 
+   */
   async function toggleTheme(valor) {
-    setIsDark(valor);
+    setIsDark(valor); //Atualiza o estado imediatamente, sem esperar o AsyncStorage
     try {
       const json = await AsyncStorage.getItem(PREFS_KEY);
       const prefs = json ? JSON.parse(json) : {};
@@ -45,6 +57,9 @@ export function ThemeProvider({ children }) {
   }
 
   return (
+    /**
+     * Envolve os filhos e disponibiliza o tema para toda a aplicação.
+     */
     <ThemeContext.Provider
       value={{ theme: isDark ? darkTheme : lightTheme, isDark, toggleTheme }}
     >

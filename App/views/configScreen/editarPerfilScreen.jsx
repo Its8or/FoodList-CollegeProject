@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useTheme } from '../styles/themeContext';
 import { useUser } from '../../services/userContext';
+import { getIniciais } from '../../services/profile';
 
 export default function EditarPerfilScreen({ navigation }) {
   const { theme } = useTheme();
@@ -9,19 +10,23 @@ export default function EditarPerfilScreen({ navigation }) {
 
   const [nome, setNome] = useState(perfil?.nome || '');
   const [email, setEmail] = useState(perfil?.email || '');
+  const [foto, setFoto] = useState(perfil?.foto || '');
 
   async function handleSalvar() {
-    // Delegamos a validação e atualização para o contexto/singleton
+    // validação e atualização para o contexto/singleton
     try {
-      await atualizarPerfil({ nome, email });
-      Alert.alert('Sucesso', 'Perfil atualizado via UserSession!', [
+      await atualizarPerfil({ nome, email, foto });
+      Alert.alert('Sucesso', 'Perfil atualizado!', [
         { text: 'OK', onPress: () => navigation.goBack() },
       ]);
     } catch (e) {
-      Alert.alert('Erro', 'Falha na validação ou salvamento.');
+      Alert.alert('Erro', `Falha na validação ou salvamento.`);
     }
   }
 
+  const houveMudanca = nome !== (perfil?.nome || '') ||
+    email !== (perfil?.email || '') ||
+    foto !== (perfil?.foto || '');
   const s = makeStyles(theme);
 
   return (
@@ -31,7 +36,7 @@ export default function EditarPerfilScreen({ navigation }) {
       {/* Avatar */}
       <View style={s.avatarContainer}>
         {foto ? (
-          <Image source={{ url: "App/imgs/profilePic.png" }} style={s.foto} />
+          <Image source={require('../../imgs/profilePic.png')} style={s.foto} />
         ) : (
           <View style={s.avatarFallback}>
             <Text style={s.avatarTexto}>{getIniciais(nome)}</Text>

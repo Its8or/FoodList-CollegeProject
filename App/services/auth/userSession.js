@@ -20,8 +20,8 @@ class UserSession {
     UserSession.instance = this;
   }
 
-  // --- MÉTODOS DE USUÁRIO ---
-  
+  // --- MÉTODOS USUÁRIO ---
+
   login(userData) {
     this._user = userData;
     this._isAuthenticated = true;
@@ -46,10 +46,11 @@ class UserSession {
   atualizarNomeUsuario(newName) {
     if (this._user) {
       validacao.setStrategy(validarNome)
-      isValidName = validacao.validar(newName, this._user.name)
-      if (isValidName == true) {
-        this._user.name = newName;
+      const isValidName = validacao.validar(newName, this._user.nome)
+      if (isValidName === true) {
+        this._user.nome = newName;
       }
+      console.log(`[Session] Nome atualizado para: ${newName}`);
     }
   }
 
@@ -61,14 +62,10 @@ class UserSession {
    */
   atualizarEmailUsuario(newEmail) {
     if (this._user) {
-      validacao.setStrategy(validarEmail)
-      isValidEmail = validacao.validar(newEmail, this._user.email)
-
-      if (isValidEmail == true) {
-        this._user.email = newEmail
+      validacao.setStrategy(validarEmail);
+      if (validacao.validar(newEmail, this._user.email)) {
+        this._user.email = newEmail;
       }
-      
-      console.log(`[Session] Email do utilizador atualizado para: ${newEmail}`);
     }
   }
   // --- UTILITÁRIOS ---

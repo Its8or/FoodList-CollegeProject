@@ -9,18 +9,25 @@ import {
 import { useTheme } from '../styles/themeContext';
 import session from '../../services/auth/userSession';
 
-export default function Conta({ navigation }) {
+/**  
+ * mostra foto, nome e email de usuário. 
+ */
+export default function ShowProfile({ navigation }) { 
   const { theme } = useTheme();
   const s = makeStyles(theme);
 
-  function handleSair() {
+  /**
+   * Encerra a sessão do usuário, envia alert de confirmção e faz Logout.
+   */
+  async function handleSair() {
     Alert.alert('Sair', 'Deseja encerrar a sessão?', [
       { text: 'Cancelar' },
       {
         text: 'Sair',
-        onPress: () => {
-          session.logout(); // Limpa Singleton
-          navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+        onPress: async () => {
+          session.logout();
+          await AsyncStorage.removeItem('@perfil_usuario'); // limpa o disco também
+          navigation.reset({ index: 0, routes: [{ name: 'Login' }] }); // redireciona para tela de login, sem volta
         },
       },
     ]);
@@ -52,7 +59,6 @@ export default function Conta({ navigation }) {
           <Text style={s.seta}>›</Text>
         </TouchableOpacity>
 
-        <View style={s.divisor} />
       </View>
     </View>
   );

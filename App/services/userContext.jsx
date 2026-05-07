@@ -4,22 +4,26 @@ import session from './auth/userSession';
 
 const PERFIL_KEY = '@perfil_usuario';
 
-const UserContext = createContext({
+export const UserContext = createContext({
   perfil: null,
-  atualizarPerfil: async () => {},
+  atualizarPerfil: async () => { },
 });
 
+/**
+ * Gerencia o perfil do usuário logado. 
+ * Carrega, atualiza e disponibiliza os dados para toda a aplicação.
+ */
 export function UserProvider({ children }) {
-  const [perfil, setPerfil] = useState(session.getUser());
+  const [perfil, setPerfil] = useState(session.getUser()); // inicializa com usuário salvo na memória.
 
   useEffect(() => {
     async function carregar() {
       try {
-        const json = await AsyncStorage.getItem(PERFIL_KEY);
+        const json = await AsyncStorage.getItem(PERFIL_KEY); // le dados do disco
         if (json !== null) {
-          const dados = JSON.parse(json);
-          session.login(dados); // Inicializa o Singleton
-          setPerfil(dados);
+          const dados = JSON.parse(json);     // converte em objeto
+          session.login(dados);               // Inicializa o Singleton
+          setPerfil(dados);                   // atualiza o estado no React
         }
       } catch (e) {
         console.warn('UserContext: erro ao carregar perfil:', e);
@@ -28,16 +32,20 @@ export function UserProvider({ children }) {
     carregar();
   }, []);
 
+  /**
+   * atualiza o perfil do usuário em três lugares.
+   * @param {*} novoPerfil
+   */
   async function atualizarPerfil(novoPerfil) {
-    // 1. Atualiza no Singleton (que usa as estratégias de validação)
+    // valida e salva em memória
     session.atualizarNomeUsuario(novoPerfil.nome);
     session.atualizarEmailUsuario(novoPerfil.email);
-    
+    // Lê o resultado já validado
     const perfilAtualizado = session.getUser();
-
-    // 2. Persiste e atualiza o estado do React para disparar re-render
+    // Persiste no disco
     await AsyncStorage.setItem(PERFIL_KEY, JSON.stringify(perfilAtualizado));
-    setPerfil({ ...perfilAtualizado }); 
+    //  Atualiza a UI
+    setPerfil({ ...perfilAtualizado });
   }
 
   return (

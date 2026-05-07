@@ -4,7 +4,7 @@ import { useTheme } from '../styles/themeContext';
 
 import PerfilUsuario from './perfilUsuario';
 import Preferencias from './preferencias';
-import Conta from './conta';
+import ShowProfile from './contaOptions';
 
 export default function ConfiguracoesScreen({ navigation }) {
   const { theme } = useTheme();
@@ -13,10 +13,10 @@ export default function ConfiguracoesScreen({ navigation }) {
     <ScrollView
       style={[styles.container, { backgroundColor: theme.backgroundMain }]}
       contentContainerStyle={styles.content}
-    >
-      <PerfilUsuario navigation={navigation} />
-      <Preferencias />
-      <Conta navigation={navigation} />
+      >
+      <PerfilUsuario navigation={navigation} />   {/* import de perfilUsuario.jsx */}
+      <Preferencias />                            {/* import de preferencias.jsx  */}
+      <ShowProfile navigation={navigation} />     {/* import de contaOptions.jsx  */}
     </ScrollView>
   );
 }

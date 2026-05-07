@@ -9,7 +9,7 @@ export default function PerfilUsuario() {
   const { perfil } = useUser();
 
   if (!perfil) {
-    return null; // Ou um <ActivityIndicator /> para indicar carregamento
+    return null;
   }
   
   const { nome, email, foto } = perfil;
