@@ -1,213 +1,245 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   Image,
+  StyleSheet,
+  SafeAreaView,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
-  Alert,
 } from 'react-native';
-import { getIniciais } from '../../services/profile';
-import { useTheme } from '../styles/themeContext';
-import { useUser } from '../../services/userContext';
 
-export default function EditarPerfilScreen({ navigation }) {
-  const { theme } = useTheme();
-  const { perfil, atualizarPerfil } = useUser();  // ← lê e escreve no contexto
+import * as ImagePicker from 'expo-image-picker';
 
-  // Inicializa os campos com os dados atuais do contexto
-  const [nome, setNome] = useState(perfil.nome);
-  const [email, setEmail] = useState(perfil.email);
-  const [foto, setFoto] = useState(perfil.foto);
+export default function EditProfileScreen({ navigation }) {
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [profileImage, setProfileImage] = useState(null);
+  const [nameFocused, setNameFocused] = useState(false);
+  const [usernameFocused, setUsernameFocused] = useState(false);
 
-  // Se o contexto mudar externamente, sincroniza os campos
-  useEffect(() => {
-    setNome(perfil.nome);
-    setEmail(perfil.email);
-    setFoto(perfil.foto);
-  }, [perfil]);
-
-  // Botão ativo apenas quando algo mudou em relação ao perfil salvo
-  const houveMudanca =
-    nome.trim() !== perfil.nome ||
-    email.trim() !== perfil.email ||
-    foto !== perfil.foto;
-
-  async function handleSalvar() {
-    if (!nome.trim()) {
-      Alert.alert('Nome inválido', 'O nome não pode ficar em branco.');
-      return;
+  const handlePickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
     }
-    if (!email.trim() || !email.includes('@')) {
-      Alert.alert('E-mail inválido', 'Insira um endereço de e-mail válido.');
-      return;
-    }
+    console.log('Abrir seletor de imagem');
+  };
 
-    const novoPerfil = { nome: nome.trim(), email: email.trim(), foto };
-
-    try {
-      await atualizarPerfil(novoPerfil); // persiste + atualiza contexto em uma chamada
-      Alert.alert('Sucesso', 'Perfil atualizado com sucesso!', [
-        { text: 'OK', onPress: () => navigation.goBack() },
-      ]);
-    } catch (e) {
-      console.warn('Erro ao salvar perfil:', e);
-      Alert.alert('Erro', 'Não foi possível salvar as alterações.');
-    }
-  }
-
-  const s = makeStyles(theme);
+  const handleSave = () => {
+    console.log('Salvar perfil:', { name, username, profileImage });
+    // navigation.goBack();
+  };
 
   return (
-    <ScrollView style={s.container} contentContainerStyle={s.content}>
-      <Text style={s.titulo}>Editar Perfil</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" backgroundColor={styles.safeArea.backgroundColor} />
 
-      {/* Avatar */}
-      <View style={s.avatarContainer}>
-        {foto ? (
-          <Image source={{ uri: foto }} style={s.foto} />
-        ) : (
-          <View style={s.avatarFallback}>
-            <Text style={s.avatarTexto}>{getIniciais(nome)}</Text>
-          </View>
-        )}
-        <TouchableOpacity style={s.botaoAlterarFoto}>
-          <Text style={s.botaoAlterarFotoTexto}>Alterar foto</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Inputs */}
-      <Text style={s.label}>Nome</Text>
-      <TextInput
-        style={s.input}
-        value={nome}
-        onChangeText={setNome}
-        placeholder="Seu nome"
-        placeholderTextColor={theme.placeholder}
-      />
-
-      <Text style={s.label}>Email</Text>
-      <TextInput
-        style={s.input}
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Seu email"
-        placeholderTextColor={theme.placeholder}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-
-      {/* Botão Salvar */}
-      <TouchableOpacity
-        style={[s.botaoSalvar, !houveMudanca && s.botaoSalvarDesabilitado]}
-        onPress={handleSalvar}
-        disabled={!houveMudanca}
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoid}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <Text style={s.textoBotao}>Salvar mudanças</Text>
-      </TouchableOpacity>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation?.goBack()}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.backArrow}>‹</Text>
+            </TouchableOpacity>
+          </View>
 
-      <TouchableOpacity style={s.botaoVoltar} onPress={() => navigation.goBack()}>
-        <Text style={s.textoBotao}>Voltar</Text>
-      </TouchableOpacity>
-    </ScrollView>
+          {/* Título */}
+          <Text style={styles.title}>Edit Profile</Text>
+
+          {/* Foto de Perfil */}
+          <View style={styles.avatarContainer}>
+            <TouchableOpacity onPress={handlePickImage} activeOpacity={0.85}>
+              {profileImage ? (
+                <Image source={{ uri: profileImage }} style={styles.avatar} />
+              ) : (
+                <View style={[styles.avatar, styles.avatarPlaceholder]}>
+                  <Text style={styles.avatarPlaceholderText}>👤</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={handlePickImage} activeOpacity={0.7}>
+              <Text style={styles.editPictureText}>Edit Profile Picture</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Campos */}
+          <View style={styles.fieldsContainer}>
+            <TextInput
+              style={[styles.input, nameFocused && styles.inputFocused]}
+              placeholder="Name"
+              placeholderTextColor="#AAAAAA"
+              value={name}
+              onChangeText={setName}
+              onFocus={() => setNameFocused(true)}
+              onBlur={() => setNameFocused(false)}
+              autoCapitalize="words"
+              returnKeyType="next"
+            />
+
+            <TextInput
+              style={[styles.input, usernameFocused && styles.inputFocused]}
+              placeholder="User Name"
+              placeholderTextColor="#AAAAAA"
+              value={username}
+              onChangeText={setUsername}
+              onFocus={() => setUsernameFocused(true)}
+              onBlur={() => setUsernameFocused(false)}
+              autoCapitalize="none"
+              returnKeyType="done"
+              onSubmitEditing={handleSave}
+            />
+          </View>
+        </ScrollView>
+
+        {/* Botão Save fixo na base */}
+        <View style={styles.footer}>
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleSave}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.saveButtonText}>Save</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
-function makeStyles(theme) {
-  return StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: theme.backgroundMain,
-    },
-    content: {
-      padding: 20,
-    },
-    titulo: {
-      fontSize: 26,
-      fontWeight: 'bold',
-      color: theme.primary,
-      textAlign: 'center',
-      marginBottom: 24,
-    },
-    avatarContainer: {
-      alignItems: 'center',
-      marginBottom: 28,
-    },
-    foto: {
-      width: 90,
-      height: 90,
-      borderRadius: 45,
-      resizeMode: 'cover',
-      marginBottom: 10,
-    },
-    avatarFallback: {
-      width: 90,
-      height: 90,
-      borderRadius: 45,
-      backgroundColor: theme.primary,
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 10,
-    },
-    avatarTexto: {
-      color: theme.avatarText,
-      fontSize: 32,
-      fontWeight: 'bold',
-    },
-    botaoAlterarFoto: {
-      paddingVertical: 6,
-      paddingHorizontal: 16,
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: theme.primary,
-    },
-    botaoAlterarFotoTexto: {
-      color: theme.primary,
-      fontSize: 13,
-      fontWeight: '600',
-    },
-    label: {
-      fontSize: 12,
-      fontWeight: '600',
-      color: theme.textDark,
-      opacity: 0.7,
-      marginBottom: 6,
-      marginLeft: 2,
-    },
-    input: {
-      backgroundColor: theme.cardBackground,
-      borderWidth: 1,
-      borderColor: theme.border,
-      borderRadius: 10,
-      padding: 12,
-      marginBottom: 16,
-      fontSize: 15,
-      color: theme.textDark,
-    },
-    botaoSalvar: {
-      backgroundColor: theme.success,
-      padding: 15,
-      borderRadius: 10,
-      alignItems: 'center',
-      marginTop: 8,
-      marginBottom: 10,
-    },
-    botaoSalvarDesabilitado: {
-      backgroundColor: theme.successDisabled,
-      opacity: 0.6,
-    },
-    botaoVoltar: {
-      backgroundColor: theme.primary,
-      padding: 15,
-      borderRadius: 10,
-      alignItems: 'center',
-    },
-    textoBotao: {
-      color: theme.textButton,
-      fontWeight: 'bold',
-      fontSize: 15,
-    },
-  });
-}
+const TEAL = '#1BB585';
+const BG = '#F5F5ED';
+const DARK = '#1A1A1A';
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: BG,
+  },
+  keyboardAvoid: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+  },
+
+  // Header
+  header: {
+    paddingTop: 35,
+    paddingBottom: 16,
+  },
+  backButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(0,0,0,0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backArrow: {
+    fontSize: 28,
+    color: DARK,
+    lineHeight: 32,
+    marginTop: -2,
+  },
+
+  // Título
+  title: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: DARK,
+    textAlign: 'center',
+    marginBottom: 32,
+    fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif',
+  },
+
+  // Avatar
+  avatarContainer: {
+    alignItems: 'center',
+    marginBottom: 32,
+    gap: 10,
+  },
+  avatar: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 2.5,
+    borderColor: '#E0E0D8',
+  },
+  avatarPlaceholder: {
+    backgroundColor: '#D0C8B8',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarPlaceholderText: {
+    fontSize: 36,
+  },
+  editPictureText: {
+    color: TEAL,
+    fontSize: 14,
+    fontWeight: '500',
+    marginTop: 6,
+  },
+
+  // Campos
+  fieldsContainer: {
+    gap: 14,
+  },
+  input: {
+    height: 52,
+    borderRadius: 50,
+    borderWidth: 1.5,
+    borderColor: '#D0D0C8',
+    backgroundColor: BG,
+    paddingHorizontal: 20,
+    fontSize: 15,
+    color: DARK,
+  },
+  inputFocused: {
+    borderColor: TEAL,
+  },
+
+  // Footer / Save
+  footer: {
+    paddingHorizontal: 24,
+    paddingBottom: Platform.OS === 'ios' ? 16 : 24,
+    paddingTop: 12,
+    backgroundColor: BG,
+  },
+  saveButton: {
+    height: 54,
+    borderRadius: 50,
+    backgroundColor: DARK,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  saveButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+    letterSpacing: 0.3,
+  },
+});
