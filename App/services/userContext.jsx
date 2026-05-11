@@ -4,8 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const PERFIL_KEY = '@perfil_usuario';
 
 const PERFIL_PADRAO = {
-  nome: 'João Silva',
-  email: 'joao.silva@email.com',
+  nome: 'Usuário Teste 1',
+  username: 'user0001',
+  email: 'user0001@gmail.com',
   foto: null,
 };
 
@@ -32,7 +33,9 @@ export function UserProvider({ children }) {
     carregar();
   }, []);
 
-  // Persiste e atualiza o contexto em uma única chamada
+  /**
+   *   Persiste e atualiza o contexto em uma única chamada
+   */ 
   async function atualizarPerfil(novoPerfil) {
     await AsyncStorage.setItem(PERFIL_KEY, JSON.stringify(novoPerfil));
     setPerfil(novoPerfil);

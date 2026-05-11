@@ -1,38 +1,26 @@
 # MobileDev-CollegeProject : FoodList
-**Proposta**: App de receitas que conecta pessoas em grupos pra mostrar receitas de seus interesses.
+**Proposta**: App de receitas pra mostrar receitas de seus interesses.
 
 ## Como funciona o App:
 
 Inicialmente você será redirecionado para a tela de Login/Register.
 
-Em seguida poderá escolher:
-1. Entrar em um grupo já existente seja inserindo o código do grupo ou pesquisando por seu nome ou por tags;
-2. Criar um grupo próprio, definindo Nome, e descrição(se desejar).
+Em seguida será redirecionado para o feed onde poderá:
+1. Visualizar as receitas salvas;
+2. Ou criar uma criar uma receita(atribuinto: Título, descrição, tags, ingredientes e modo de preparo).
 
 ## Telas do App:
 
-     1. Grupos: 
+     1. Login/Registro;
 
-          1.1 ENTRAR EM GRUPOS;
+     2. feed (Já logado):
 
-          1.2 CRIAR GRUPOS;
+          2.1. View de Receitas;
 
-     2. Login/Registro;
+          2.2. Adicionar Receitas;
 
-     3. Inicio (Já logado em um grupo):
+     3.Receitas:
 
-          1.1. View de Receitas;
-     
-          1.2. VIew de Participantes;
-     
-          1.3. Adicionar Receitas;
+     3.1 Editar/Apagar Receitas;
 
-     4.Receitas:
-
-     1.1 Editar/Apagar Receitas;
-
-     1.2. Visualizar
-
-## Confira o rascunho das telas do app
-
-para poder acessar os rascunhos [clique aqui](imgs\README.md).
+     3.2. Visualizar
