@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native'
 import ConfiguracoesScreen from './views/configScreen/configScreen'
 import EditarPerfilScreen from './views/configScreen/editarPerfilScreen';
+import joinGroupScreen from './views/groupScreen/joinGroupScreen'
 // import feedScreen from './views/feedScreen/feedScreen'
 // import recipeScreen from './views/recipeScreen/recipeScreen'
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,7 +17,7 @@ function MyStack() {
     <ThemeProvider>
       <UserProvider>
         <Stack.Navigator>
-          {/* <Stack.Screen name="Feed" component={feedScreen} /> */}
+          <Stack.Screen name="EntrarGrupo" component={joinGroupScreen}/>
           <Stack.Screen name="Configurações" component={ConfiguracoesScreen} />
           <Stack.Screen name="EditarPerfil" component={EditarPerfilScreen} />
         </Stack.Navigator>
