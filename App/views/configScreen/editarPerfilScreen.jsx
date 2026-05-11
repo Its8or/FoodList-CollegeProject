@@ -7,8 +7,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 
 import { useTheme } from '../styles/themeContext';
-import { useUser, atualizarPerfil } from '../../services/userContext';
-
+import { useUser } from '../../services/userContext';
 
 export default function EditProfileScreen({ navigation }) {
   const { perfil, atualizarPerfil } = useUser();
