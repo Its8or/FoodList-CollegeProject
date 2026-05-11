@@ -2,14 +2,13 @@
 // estratégia de validação de nome
 export const validarNome = {
     validar(nomeNovo, nomeAtual) {
-        (nomeNovo == nomeAtual) ? true : false;
+        return nomeNovo !== nomeAtual; // retorna true se mudou
     }
 };
-
 // estratégia de validação de email
 export const validarEmail = {
     validar(emailNovo, emailAtual) {
-        (emailNovo == emailAtual) ? true : false;
+        return emailNovo !== emailAtual;
     }
 };
 
@@ -28,7 +27,7 @@ class ValidarStrategy {
      * @param {*} strategy - Estratégia que será utilizada
      */
     setStrategy(strategy) {
-        this.setStrategy = strategy;
+        this.strategy = strategy;
     };
 
     /**
