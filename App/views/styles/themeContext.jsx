@@ -1,74 +1,53 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { lightTheme, darkTheme } from './theme';
+import React, { createContext, useContext, useState } from 'react';
 
-const PREFS_KEY = '@preferencias_usuario';
+const ThemeContext = createContext();
 
-const ThemeContext = createContext({
-  theme: lightTheme,
-  isDark: false,
-  toggleTheme: () => {},
-});
+export const lightTheme = {
+  BG:       '#F5F5ED',
+  CARD:     '#EEEEE6',
+  DARK:     '#1A1A1A',
+  MUTED:    '#888880',
+  BORDER:   '#D0D0C8',
+  READONLY: '#EEEEE6',
+  INPUT_BG: '#F5F5ED',
+  TEAL:     '#1BB585',
+  DANGER:   '#D85A30',
+  SAVE_BTN: '#1A1A1A',
+  SAVE_TXT: '#FFFFFF',
+  BACK_BTN: 'rgba(0,0,0,0.06)',
+  DIVIDER:  'rgba(0,0,0,0.08)',
+  STATUS:   'dark-content',
+};
 
-/**
- * Controla e salva  o Tema do aplicativo do Usuário.
- */
+export const darkTheme = {
+  BG:       '#1A1A18',
+  CARD:     '#2A2A26',
+  DARK:     '#F0F0E8',
+  MUTED:    '#888880',
+  BORDER:   '#3A3A34',
+  READONLY: '#2A2A26',
+  INPUT_BG: '#242420',
+  TEAL:     '#1BB585',
+  DANGER:   '#E8724A',
+  SAVE_BTN: '#F0F0E8',
+  SAVE_TXT: '#1A1A18',
+  BACK_BTN: 'rgba(255,255,255,0.08)',
+  DIVIDER:  'rgba(255,255,255,0.06)',
+  STATUS:   'light-content',
+};
+
 export function ThemeProvider({ children }) {
-  {/**
-    * isDark:     valor atual
-    * setIsDark:  função para atualizar tema
-    */}
-  const [isDark, setIsDark] = useState(false); {/* guarda e atualiza tema do app */}
-
-  useEffect(() => {
-    /**
-     * Carrega preferência de tema do usuário
-     */
-    async function carregarTema() {
-      try {
-        const json = await AsyncStorage.getItem(PREFS_KEY); // busca e atribue as preferências de usuário.
-        if (json !== null) {
-          const prefs = JSON.parse(json);
-          setIsDark(prefs.modoEscuro ?? false);
-        }
-      } catch (e) {
-        console.warn('ThemeProvider: erro ao carregar tema:', e);
-      }
-    }
-    carregarTema();
-  }, []);
-
-  /**
-   * Atualiza o tema e salva a preferência no armazenamento local
-   * @param {Boolean} valor: true(escuro) | false(claro) 
-   */
-  async function toggleTheme(valor) {
-    setIsDark(valor); //Atualiza o estado imediatamente, sem esperar o AsyncStorage
-    try {
-      const json = await AsyncStorage.getItem(PREFS_KEY);
-      const prefs = json ? JSON.parse(json) : {};
-      await AsyncStorage.setItem(
-        PREFS_KEY,
-        JSON.stringify({ ...prefs, modoEscuro: valor })
-      );
-    } catch (e) {
-      console.warn('ThemeProvider: erro ao salvar tema:', e);
-    }
-  }
+  const [isDark, setIsDark] = useState(false);
+  const theme = isDark ? darkTheme : lightTheme;
+  const toggleTheme = () => setIsDark(v => !v);
 
   return (
-    /**
-     * Envolve os filhos e disponibiliza o tema para toda a aplicação.
-     */
-    <ThemeContext.Provider
-      value={{ theme: isDark ? darkTheme : lightTheme, isDark, toggleTheme }}
-    >
+    <ThemeContext.Provider value={{ theme, isDark, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
-// Hook de conveniência
 export function useTheme() {
   return useContext(ThemeContext);
 }
