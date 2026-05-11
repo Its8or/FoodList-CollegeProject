@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
 
   titulo: {
     fontSize: 28,
+    paddingTop: 35,
     fontWeight: 'bold',
     color: '#ff6600',
     textAlign: 'center',
