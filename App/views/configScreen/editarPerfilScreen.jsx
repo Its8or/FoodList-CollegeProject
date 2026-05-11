@@ -4,29 +4,43 @@ import {
   StyleSheet, SafeAreaView, StatusBar,
   KeyboardAvoidingView, Platform, ScrollView,
 } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
 import { useTheme } from '../styles/themeContext';
 import { useUser, atualizarPerfil } from '../../services/userContext';
 
 
 export default function EditProfileScreen({ navigation }) {
-  const { perfil, atualizarPerfil }           = useUser();
-  const { theme: t }                          = useTheme();
-  const [name, setName]                       = useState(perfil.nome);
-  const [username, setUsername]               = useState(perfil.username);
-  const [profileImage, setProfileImage]       = useState(perfil.foto);
-  const [nameFocused, setNameFocused]         = useState(false);
+  const { perfil, atualizarPerfil } = useUser();
+  const { theme: t } = useTheme();
+  const [name, setName] = useState(perfil.nome);
+  const [username, setUsername] = useState(perfil.username);
+  const [profileImage, setProfileImage] = useState(perfil.foto);
+  const [nameFocused, setNameFocused] = useState(false);
   const [usernameFocused, setUsernameFocused] = useState(false);
-  
+
+  // Após os useState existentes, adicione:
+  const hasChanges =
+    name !== perfil.nome ||
+    username !== perfil.username ||
+    profileImage !== perfil.foto;
+
   const handlePickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({ 
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    // Solicita permissão
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Permissão para acessar a galeria é necessária!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.8,
     });
+
     if (!result.canceled) setProfileImage(result.assets[0].uri);
-    console.log('Abrir seletor de imagem');
   };
 
   const handleSave = async () => {
@@ -44,6 +58,7 @@ export default function EditProfileScreen({ navigation }) {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
+          {/* Go Back Button */}
           <View style={styles.header}>
             <TouchableOpacity
               style={[styles.backButton, { backgroundColor: t.BACK_BTN }]}
@@ -54,8 +69,9 @@ export default function EditProfileScreen({ navigation }) {
             </TouchableOpacity>
           </View>
 
-          <Text style={[styles.title, { color: t.DARK }]}>Edit Profile</Text>
+          <Text style={[styles.title, { color: t.DARK }]}>Editar Perfil</Text>
 
+          {/* Avatar container */}
           <View style={styles.avatarContainer}>
             <TouchableOpacity onPress={handlePickImage} activeOpacity={0.85}>
               {profileImage ? (
@@ -72,21 +88,21 @@ export default function EditProfileScreen({ navigation }) {
           </View>
 
           <View style={styles.fieldsContainer}>
+            {/* Name Input */}
             <TextInput
               style={[styles.input, { borderColor: nameFocused ? t.TEAL : t.BORDER, backgroundColor: t.INPUT_BG, color: t.DARK }]}
-              placeholder="Name"
+              placeholder={name}
               placeholderTextColor={t.MUTED}
-              value={name}
               onChangeText={setName}
               onFocus={() => setNameFocused(true)}
               onBlur={() => setNameFocused(false)}
               autoCapitalize="words"
             />
+            {/* UserName Input */}
             <TextInput
               style={[styles.input, { borderColor: usernameFocused ? t.TEAL : t.BORDER, backgroundColor: t.INPUT_BG, color: t.DARK }]}
-              placeholder="User Name"
+              placeholder={username}
               placeholderTextColor={t.MUTED}
-              value={username}
               onChangeText={setUsername}
               onFocus={() => setUsernameFocused(true)}
               onBlur={() => setUsernameFocused(false)}
@@ -96,8 +112,8 @@ export default function EditProfileScreen({ navigation }) {
         </ScrollView>
 
         <View style={[styles.footer, { backgroundColor: t.BG }]}>
-          <TouchableOpacity style={[styles.saveButton, { backgroundColor: t.SAVE_BTN }]} onPress={handleSave} activeOpacity={0.85}>
-            <Text style={[styles.saveButtonText, { color: t.SAVE_TXT }]}>Save</Text>
+          <TouchableOpacity style={[styles.saveButtonAble, { backgroundColor: hasChanges ?  t.SAVE_BTN : t.BORDER }]} disabled={!hasChanges} onPress={handleSave} activeOpacity={0.85}>
+            <Text style={[styles.saveButtonTextAble, { color: t.SAVE_TXT }]}>Save</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -131,6 +147,6 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === 'ios' ? 16 : 24,
     paddingTop: 12,
   },
-  saveButton: { height: 54, borderRadius: 50, alignItems: 'center', justifyContent: 'center' },
-  saveButtonText: { fontSize: 16, fontWeight: '600', letterSpacing: 0.3 },
+  saveButtonAble: { height: 54, borderRadius: 50, alignItems: 'center', justifyContent: 'center' },
+  saveButtonTextAble: { fontSize: 16, fontWeight: '600', letterSpacing: 0.3 },
 });
