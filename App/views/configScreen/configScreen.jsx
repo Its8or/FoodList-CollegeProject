@@ -1,13 +1,14 @@
+// Coloque este arquivo em: views/configScreen/configScreen.jsx
 import React, { useState } from 'react';
 import {
-  View, Text, TouchableOpacity, Switch,
+  View, Text, TouchableOpacity, Switch, Alert,
   StyleSheet, SafeAreaView, StatusBar,
   ScrollView, Platform,
 } from 'react-native';
 
 import { useTheme } from '../styles/themeContext';
-import { useUser } from '../../services/userContext';
-
+import { useUser }  from '../../services/userContext';
+import { useAuth }  from '../../services/authContext';
 
 function SectionTitle({ label, t }) {
   return <Text style={[styles.sectionTitle, { color: t.MUTED }]}>{label}</Text>;
@@ -16,7 +17,11 @@ function SectionTitle({ label, t }) {
 function RowItem({ icon, label, value, onPress, danger, t }) {
   return (
     <TouchableOpacity style={styles.row} onPress={onPress} activeOpacity={0.6}>
-      <View style={[styles.iconBox, { backgroundColor: t.BACK_BTN }, danger && { backgroundColor: 'rgba(216,90,48,0.12)' }]}>
+      <View style={[
+        styles.iconBox,
+        { backgroundColor: t.BACK_BTN },
+        danger && { backgroundColor: 'rgba(216,90,48,0.12)' },
+      ]}>
         <Text style={styles.iconEmoji}>{icon}</Text>
       </View>
       <Text style={[styles.rowLabel, { color: danger ? t.DANGER : t.DARK }]}>{label}</Text>
@@ -53,18 +58,41 @@ function Divider({ t }) {
 
 export default function SettingsScreen({ navigation }) {
   const { theme: t, isDark, toggleTheme } = useTheme();
-  const [notifications, setNotifications]   = useState(true);
-  const [privateAccount, setPrivateAccount] = useState(false);
-  const { perfil } = useUser();
+  const { perfil }  = useUser();
+  const { logout }  = useAuth();
+
+  function handleLogout() {
+    Alert.alert(
+      'Sair da conta',
+      'Tem certeza que deseja sair?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Sair',
+          style: 'destructive',
+          // logout() atualiza isAuthenticated → App troca para AuthNavigator automaticamente
+          onPress: logout,
+        },
+      ],
+    );
+  }
+
+  function handleDeleteAccount() {
+    Alert.alert(
+      'Excluir conta',
+      'Esta ação é permanente e não pode ser desfeita. Deseja continuar?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Excluir', style: 'destructive', onPress: logout },
+      ],
+    );
+  }
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: t.BG }]}>
       <StatusBar barStyle={t.STATUS} backgroundColor={t.BG} />
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <TouchableOpacity
             style={[styles.backButton, { backgroundColor: t.BACK_BTN }]}
@@ -79,23 +107,23 @@ export default function SettingsScreen({ navigation }) {
 
         <SectionTitle label="Account" t={t} />
         <View style={[styles.card, { backgroundColor: t.CARD }]}>
-          <RowItem icon="👤" label="Edit Profile"     onPress={() => navigation?.navigate('EditProfile')}    t={t} />
+          <RowItem icon="👤" label="Edit Profile"    onPress={() => navigation?.navigate('EditProfile')}    t={t} />
           <Divider t={t} />
-          <RowItem icon="🔒" label="Change Password"  onPress={() => navigation?.navigate('ChangePassword')} t={t} />
+          <RowItem icon="🔒" label="Change Password" onPress={() => navigation?.navigate('ChangePassword')} t={t} />
           <Divider t={t} />
           <RowItem icon="📧" label="Email" value={perfil.email} onPress={() => navigation?.navigate('ChangeEmail')} t={t} />
         </View>
 
         <SectionTitle label="Preferences" t={t} />
         <View style={[styles.card, { backgroundColor: t.CARD }]}>
-          <RowToggle icon="🌙" label="Dark Mode"      value={isDark}         onValueChange={toggleTheme}       t={t} />
+          <RowToggle icon="🌙" label="Dark Mode" value={isDark} onValueChange={toggleTheme} t={t} />
         </View>
 
         <SectionTitle label="Account Actions" t={t} />
         <View style={[styles.card, { backgroundColor: t.CARD }]}>
-          <RowItem icon="🚪" label="Log Out"        onPress={() => {}} danger t={t} />
+          <RowItem icon="🚪" label="Log Out"        onPress={handleLogout}        danger t={t} />
           <Divider t={t} />
-          <RowItem icon="🗑️" label="Delete Account" onPress={() => {}} danger t={t} />
+          <RowItem icon="🗑️" label="Delete Account" onPress={handleDeleteAccount} danger t={t} />
         </View>
 
         <Text style={[styles.version, { color: t.MUTED }]}>FoodList v1.0.0</Text>
