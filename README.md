@@ -1,6 +1,6 @@
 # FoodList 🍽️
 
-App de receitas que conecta pessoas em grupos para compartilhar e descobrir receitas de seus interesses.
+Aplicativo mobile de gerenciamento de receitas culinárias, desenvolvido em **React Native**. Permite cadastrar, visualizar, editar e excluir receitas, com suporte a temas claro/escuro e persistência local de dados.
 
 ---
 
@@ -25,36 +25,49 @@ App de receitas que conecta pessoas em grupos para compartilhar e descobrir rece
 | Expo Image Picker | Seleção de foto de perfil |
 
 ---
+ 
+## Funcionalidades
+ 
+- **Autenticação** — cadastro e login de usuários com sessão persistida
+- **Feed de Receitas** — listagem com busca por nome, descrição e tags
+- **Gerenciamento de Receitas** — criar, visualizar e editar receitas com ingredientes, modo de preparo e tags
+- **Perfil de Usuário** — edição de nome, e-mail, senha e foto de perfil
+- **Tema Claro / Escuro** — alternância com preferência salva localmente
+- **Persistência Local** — todos os dados armazenados via `AsyncStorage`, sem necessidade de backend
 
+---
 ## Estrutura do Projeto
 
 ```
-├── App.js
 ├── services/
-│   ├── authContext.jsx        # Autenticação — login, cadastro, logout (persistido)
-│   ├── userContext.jsx        # Perfil do usuário (persistido)
-│   ├── recipesContext.jsx     # Receitas — CRUD + persistência
-│   ├── userSession.js         # Singleton de sessão (legado)
-│   └── validateData.js        # Strategy pattern para validações
+│   ├── authContext.jsx        # Contexto de autenticação (login, cadastro, logout)
+│   ├── userContext.jsx        # Contexto de perfil do usuário
+│   ├── recipesContext.jsx     # Contexto de receitas (CRUD)
+│   ├── profile.js             # Utilitário: geração de iniciais do nome
+│   ├── storage/
+│   │   └── users.js           # Armazenamento de usuários
+│   └── validators/
+│       ├── loginValidator.js  # Validações do formulário de login
+│       └── registerValidator.js # Validações do formulário de cadastro
+│
 └── views/
-    ├── styles/
-    │   └── themeContext.jsx   # Tema claro/escuro (persistido)
-    ├── authScreen/
-    │   ├── TelaLogin.jsx      # Login
-    │   └── TelaCadastro.jsx   # Cadastro de conta
+    ├── AuthScreen/
+    │   ├── TelaLogin.js        # Tela de login
+    │   └── TelaCadastro.js     # Tela de cadastro
     ├── feedScreen/
-    │   └── feedScreen.jsx     # Feed com busca e lista de receitas
+    │   └── feedScreen.jsx      # Feed principal com lista e busca
     ├── recipeScreen/
-    │   ├── recipeScreen.jsx   # Visualização detalhada + editar + apagar
-    │   ├── createRecipeScreen.jsx
-    │   └── editRecipeScreen.jsx
-    └── configScreen/
-        ├── configScreen.jsx
-        ├── editarPerfilScreen.jsx
-        ├── changePasswordScreen.jsx
-        └── changeEmailScreen.jsx
+    │   ├── createRecipeScreen.jsx # Criação de nova receita
+    │   ├── editRecipeScreen.jsx   # Edição de receita existente
+    │   └── recipeScreen.jsx       # Visualização de receita
+    ├── configScreen/
+    │   ├── configScreen.jsx       # Tela de configurações
+    │   ├── editarPerfilScreen.jsx # Edição de perfil
+    │   ├── changeEmailScreen.jsx  # Alteração de e-mail
+    │   └── changePasswordScreen.jsx # Alteração de senha
+    └── styles/
+        └── themeContext.jsx    # Contexto de tema (claro/escuro)
 ```
-
 ---
 
 ## Fluxo de Navegação
@@ -77,6 +90,73 @@ App
 
 A troca entre os navegadores é automática: quando `isAuthenticated` muda no `AuthContext`, o `RootNavigator` renderiza o stack correto sem nenhuma navegação manual.
 
+---
+## Contextos (Estado Global)
+ 
+### `AuthContext`
+Gerencia autenticação com persistência de sessão via `AsyncStorage`.
+ 
+| Valor / Função | Descrição |
+|---|---|
+| `currentUser` | Objeto do usuário logado |
+| `isAuthenticated` | Booleano de estado de autenticação |
+| `loading` | Aguarda carregamento inicial do AsyncStorage |
+| `register({ nome, email, senha })` | Cadastra novo usuário; retorna `false` se nome duplicado |
+| `login(nome, senha)` | Autentica o usuário; retorna `false` se inválido |
+| `logout()` | Encerra a sessão |
+| `nomeUnico(nome)` | Verifica se um nome de usuário está disponível |
+ 
+### `RecipesContext`
+CRUD completo de receitas com persistência local.
+ 
+| Valor / Função | Descrição |
+|---|---|
+| `recipes` | Array de todas as receitas |
+| `addRecipe(recipe)` | Adiciona nova receita com `id` e `createdAt` gerados automaticamente |
+| `deleteRecipe(id)` | Remove receita pelo ID |
+| `updateRecipe(id, data)` | Atualiza campos de uma receita existente |
+ 
+### `UserContext`
+Gerencia o perfil do usuário logado.
+ 
+| Valor / Função | Descrição |
+|---|---|
+| `perfil` | Objeto com `nome`, `username`, `email` e `foto` |
+| `atualizarPerfil(novoPerfil)` | Persiste e atualiza o perfil no estado e no AsyncStorage |
+ 
+### `ThemeContext`
+Controla o tema visual com persistência da preferência.
+ 
+| Valor / Função | Descrição |
+|---|---|
+| `theme` | Objeto com todas as variáveis de cor do tema ativo |
+| `isDark` | Booleano indicando tema escuro |
+| `toggleTheme()` | Alterna entre claro e escuro e persiste a preferência |
+ 
+---
+## Validações
+ 
+### Cadastro (`registerValidator.js`)
+- Todos os campos obrigatórios (nome, e-mail, senha, confirmação)
+- E-mail deve ser `@gmail.com` ou `@hotmail.com`
+- Senha com no mínimo 6 caracteres
+- Confirmação de senha deve coincidir
+- Nome de usuário único
+### Login (`loginValidator.js`)
+- Nome e senha não podem ser vazios
+- Credenciais verificadas contra a lista de usuários
+---
+ 
+## Campos de uma Receita
+ 
+| Campo | Obrigatório | Descrição |
+|---|---|---|
+| `nome` | ✅ | Nome da receita |
+| `descricao` | ❌ | Breve descrição |
+| `ingredientes` | ✅ | Lista de ingredientes |
+| `modoPreparo` | ✅ | Passo a passo do preparo |
+| `tags` | ❌ | Tags separadas por vírgula (ex: `sobremesa, fácil`) |
+ 
 ---
 
 ## Telas
