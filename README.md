@@ -4,6 +4,16 @@ App de receitas que conecta pessoas em grupos para compartilhar e descobrir rece
 
 ---
 
+## Integrantes
+|  Nome | Matricula |
+| --- | --- |
+|[Heitor Oliveira Terto](https://github.com/Its8or) | 01881047 |
+|[João Claudio Bezerra](https://github.com/joaoclaudiotech) | 01864641 |
+|[Jorge Luiz da Silva Magalhães](https://github.com/JoojS2) | 01816817 |
+|[Lucas Roberto Oliveira](https://github.com/lucasx86) | 01854426 |
+
+---
+
 ## Tecnologias
 
 | Tecnologia | Uso |
