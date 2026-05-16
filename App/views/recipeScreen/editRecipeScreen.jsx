@@ -1,4 +1,3 @@
-// Coloque este arquivo em: views/recipeScreen/editRecipeScreen.jsx
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,

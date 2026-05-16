@@ -162,9 +162,3 @@ npm install react-native-screens react-native-safe-area-context
 npm install @react-native-async-storage/async-storage
 npm install expo-image-picker
 ```
-
----
-
-## Confira os rascunhos das telas
-
-Para acessar os rascunhos [clique aqui](imgs/README.md).

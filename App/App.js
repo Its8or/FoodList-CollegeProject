@@ -66,10 +66,10 @@ function RootNavigator() {
 
 export default function App() {
   return (
-    <UserProvider>
-      <AuthProvider>
-        <ThemeProvider>
-          <RecipesProvider>
+    <UserProvider>                {/* disponibiliza os dados de perfil do usuário logado */}
+      <AuthProvider>              {/* gerencia o estado de autenticação */}
+        <ThemeProvider>           {/* controla o tema visual (dark/light mode) */}
+          <RecipesProvider>       {/* controla e carrega dados, CRUD de receitas, pode mudar conforme usuário*/}
             <NavigationContainer>
               <RootNavigator />
             </NavigationContainer>

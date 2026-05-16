@@ -1,4 +1,4 @@
-// Coloque este arquivo em: views/authScreen/TelaCadastro.jsx
+
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,

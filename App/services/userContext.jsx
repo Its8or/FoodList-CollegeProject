@@ -4,9 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const PERFIL_KEY = '@perfil_usuario';
 
 const PERFIL_PADRAO = {
-  nome: 'Usuário Teste 1',
-  username: 'user0001',
-  email: 'user0001@gmail.com',
+  nome: null,
+  username: null,
+  email: null,
   foto: null,
 };
 

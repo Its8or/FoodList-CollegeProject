@@ -1,4 +1,3 @@
-// Coloque este arquivo em: views/authScreen/TelaLogin.jsx
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,

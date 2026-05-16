@@ -1,4 +1,3 @@
-// Coloque este arquivo em: views/configScreen/configScreen.jsx
 import React, { useState } from 'react';
 import {
   View, Text, TouchableOpacity, Switch, Alert,

@@ -83,7 +83,10 @@ export function AuthProvider({ children }) {
 
   // Utilitário usado na tela de cadastro
   function nomeUnico(nome) {
-    return !users.some(u => u.nome.toLowerCase() === nome.trim().toLowerCase());
+    return !users.some(
+      u => u.nome.toLowerCase() 
+      === nome.trim().toLowerCase()
+    );
   }
 
   return (

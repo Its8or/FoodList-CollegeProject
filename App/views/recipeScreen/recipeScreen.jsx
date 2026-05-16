@@ -1,4 +1,3 @@
-// Coloque este arquivo em: views/recipeScreen/recipeScreen.jsx
 import React from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, Alert,
