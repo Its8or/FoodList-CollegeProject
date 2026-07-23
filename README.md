@@ -5,12 +5,12 @@ Aplicativo mobile de gerenciamento de receitas culinárias, desenvolvido em **Re
 ---
 
 ## Integrantes
-|  Nome | Matricula | Responsável por |
-| --- | --- | --- |
-|[Heitor Oliveira Terto](https://github.com/Its8or) | 01881047 | ConfigScreen: Tela Principal, trocar email, trocar senha e Editar Perfil; e criação de todos os arquivos auxiliares. |
-|[João Claudio Bezerra](https://github.com/joaoclaudiotech) | 01864641 | AuthScreen: Login e Registro; e criação de todos os arquivos auxiliares. |
-|[Jorge Luiz da Silva Magalhães](https://github.com/JoojS2) | 01816817 | Feed; e criação de todos os arquivos auxiliares. |
-|[Lucas Roberto Oliveira](https://github.com/lucasx86) | 01854426 | Receitas; e criação de todos os arquivos auxiliares. |
+|  Nome | Responsável por... |
+| --- | --- |
+|[Heitor Oliveira Terto](https://github.com/Its8or) | ConfigScreen: Tela Principal, trocar email, trocar senha e Editar Perfil; e criação de todos os arquivos auxiliares. |
+|[João Claudio Bezerra](https://github.com/joaoclaudiotech) | AuthScreen: Login e Registro; e criação de todos os arquivos auxiliares. |
+|[Jorge Luiz da Silva Magalhães](https://github.com/JoojS2) | Feed; e criação de todos os arquivos auxiliares. |
+|[Lucas Roberto Oliveira](https://github.com/lucasx86) | Receitas; e criação de todos os arquivos auxiliares. |
 
 ---
 
