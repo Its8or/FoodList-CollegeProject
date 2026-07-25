@@ -2,6 +2,8 @@
 
 Aplicativo mobile de gerenciamento de receitas culinárias, desenvolvido em **React Native**. Permite cadastrar, visualizar, editar e excluir receitas, com suporte a temas claro/escuro e persistência local de dados.
 
+[![Licença MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE.md)
+
 ---
 
 ## Integrantes
@@ -252,3 +254,6 @@ npm install react-native-screens react-native-safe-area-context
 npm install @react-native-async-storage/async-storage
 npm install expo-image-picker
 ```
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE.md) para mais detalhes.
